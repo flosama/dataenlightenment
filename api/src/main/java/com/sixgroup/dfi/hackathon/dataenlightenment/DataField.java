@@ -9,13 +9,18 @@ package com.sixgroup.dfi.hackathon.dataenlightenment;
 
 /**
  * @author saynoom
- *
  */
 public class DataField {
 
     // --- Fields --------------------------------------------------------------
 
+    private final String name;
+
     // --- Constructors --------------------------------------------------------
+
+    public DataField(String name) {
+        this.name = name;
+    }
 
     // --- Properties ----------------------------------------------------------
 

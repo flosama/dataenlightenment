@@ -12,6 +12,13 @@ package com.sixgroup.dfi.hackathon.dataenlightenment;
  */
 public interface DataService {
 
+    /**
+     * Requests the data of the specified {@link DataField field}.
+     * 
+     * @param field
+     *            The {@link DataField} to access.
+     * @return the data of the specified {@link DataField field}.
+     */
     public String getData(DataField field);
 
 }
