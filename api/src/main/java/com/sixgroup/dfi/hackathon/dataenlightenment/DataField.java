@@ -10,7 +10,7 @@ package com.sixgroup.dfi.hackathon.dataenlightenment;
 /**
  * @author saynoom
  */
-public class DataField {
+public class DataField implements Comparable<DataField> {
 
     // --- Fields --------------------------------------------------------------
 
@@ -56,11 +56,37 @@ public class DataField {
 
     // --- Comparison ----------------------------------------------------------
 
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof DataField && equals((DataField) obj);
+    }
+
+    public boolean equals(DataField other) {
+        return other != null && this.name.equals(other.name);
+    }
+
+    @Override
+    public int compareTo(DataField other) {
+        if (other == null)
+            return -1;
+        return this.name.compareTo(other.name);
+    }
+
     // --- Duplication ---------------------------------------------------------
 
     // --- Conversion ----------------------------------------------------------
 
     // --- Display -------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return name;
+    }
 
     // --- Serialization -------------------------------------------------------
 

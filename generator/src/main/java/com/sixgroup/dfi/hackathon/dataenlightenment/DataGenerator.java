@@ -28,36 +28,12 @@ public class DataGenerator {
         this.dataService = dataService;
     }
 
-    // --- Properties ----------------------------------------------------------
-
-    // --- Creation ------------------------------------------------------------
-
-    // --- Addition ------------------------------------------------------------
-
-    // --- Access --------------------------------------------------------------
-
-    // --- Examination ---------------------------------------------------------
-
-    // --- Editing -------------------------------------------------------------
-
-    // --- Removal -------------------------------------------------------------
-
-    // --- Measurement ---------------------------------------------------------
-
-    // --- Status report -------------------------------------------------------
-
-    // --- Status setting ------------------------------------------------------
-
-    // --- Cursor movement -----------------------------------------------------
-
-    // --- Actions -------------------------------------------------------------
-
     // --- Basic operations ----------------------------------------------------
 
     public void generateData(Instructions instructions, int iterations) {
         int index = random.nextInt(instructions.count());
         DataField field = instructions.getField(index);
-        for (int i = 0; i < iterations; i++) {
+        for (int i = 0; field != null && i < iterations; i++) {
             // do the visit
             dataService.getData(field);
             field = getRandomField(instructions, field);
@@ -67,29 +43,5 @@ public class DataGenerator {
     private DataField getRandomField(Instructions instructions, DataField predecessor) {
         return instructions.getField(predecessor, random.nextDouble());
     }
-
-    // --- Miscellaneous -------------------------------------------------------
-
-    // --- Transformation ------------------------------------------------------
-
-    // --- Observation ---------------------------------------------------------
-
-    // --- Comparison ----------------------------------------------------------
-
-    // --- Duplication ---------------------------------------------------------
-
-    // --- Conversion ----------------------------------------------------------
-
-    // --- Display -------------------------------------------------------------
-
-    // --- Serialization -------------------------------------------------------
-
-    // --- Initialization ------------------------------------------------------
-
-    // --- Finalization --------------------------------------------------------
-
-    // --- Private implementation ----------------------------------------------
-
-    // --- Inner types ---------------------------------------------------------
 
 }

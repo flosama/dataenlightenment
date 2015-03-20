@@ -9,12 +9,11 @@ package com.sixgroup.dfi.hackathon.dataenlightenment;
 
 /**
  * @author saynoom
- *
  */
-public class Instruction {
+public class Instruction implements Comparable<Instruction> {
 
     // --- Fields --------------------------------------------------------------
-    
+
     private final DataField predecessor;
     private final DataField successor;
     private final int weight;
@@ -27,9 +26,9 @@ public class Instruction {
         this.successor = successor;
         this.weight = weight;
     }
-    
+
     // --- Properties ----------------------------------------------------------
-    
+
     public DataField getPredecessor() {
         return predecessor;
     }
@@ -78,7 +77,41 @@ public class Instruction {
 
     // --- Conversion ----------------------------------------------------------
 
+    @Override
+    public int hashCode() {
+        int hash = 23;
+        hash = hash * 31 + predecessor.hashCode();
+        hash = hash * 31 + successor.hashCode();
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Instruction && equals((Instruction) obj);
+    }
+
+    public boolean equals(Instruction other) {
+        return other != null
+                && this.predecessor.equals(other.predecessor)
+                && this.successor.equals(other.successor);
+    }
+
+    @Override
+    public int compareTo(Instruction other) {
+        if (other == null)
+            return -1;
+        int comp = this.predecessor.compareTo(other.predecessor);
+        if (comp == 0)
+            comp = this.successor.compareTo(other.successor);
+        return comp;
+    }
+
     // --- Display -------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return predecessor + " -> " + successor + " (" + weight + ")";
+    }
 
     // --- Serialization -------------------------------------------------------
 
