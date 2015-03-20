@@ -24,6 +24,13 @@ public class DataField implements Comparable<DataField> {
 
     // --- Properties ----------------------------------------------------------
 
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
     // --- Creation ------------------------------------------------------------
 
     // --- Addition ------------------------------------------------------------
