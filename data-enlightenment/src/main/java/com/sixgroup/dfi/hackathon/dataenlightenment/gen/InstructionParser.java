@@ -11,6 +11,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.sixgroup.dfi.hackathon.dataenlightenment.DataField;
 
@@ -19,64 +21,42 @@ import com.sixgroup.dfi.hackathon.dataenlightenment.DataField;
  */
 public class InstructionParser {
 
-    // --- Fields --------------------------------------------------------------
-
     // --- Constructors --------------------------------------------------------
 
-    // --- Properties ----------------------------------------------------------
-
-    // --- Creation ------------------------------------------------------------
-
-    // --- Addition ------------------------------------------------------------
-
-    // --- Access --------------------------------------------------------------
-
-    // --- Examination ---------------------------------------------------------
-
-    // --- Editing -------------------------------------------------------------
-
-    // --- Removal -------------------------------------------------------------
-
-    // --- Measurement ---------------------------------------------------------
-
-    // --- Status report -------------------------------------------------------
-
-    // --- Status setting ------------------------------------------------------
-
-    // --- Cursor movement -----------------------------------------------------
-
-    // --- Actions -------------------------------------------------------------
+    public InstructionParser() {
+        super();
+    }
 
     // --- Basic operations ----------------------------------------------------
 
-    public Instructions parseInstructions(File definition) throws IOException {
-        Instructions instructions = new Instructions();
+    public List<Instruction> parseInstructions(File definition) throws IOException {
+        List<Instruction> instructions = new LinkedList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(definition))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 Instruction instruction = parseInstruction(line);
                 if (instruction != null)
-                    instructions.insertInstruction(instruction);
+                    instructions.add(instruction);
             }
         }
         return instructions;
     }
 
-    private Instruction parseInstruction(String line) {
+    public Instruction parseInstruction(String line) {
         Instruction instruction = null;
         int index0 = line.indexOf("->");
         int index1 = line.indexOf('=');
         if (index0 >= 0 && index1 >= 0) {
             DataField predecessor = parseDataField(line.substring(0, index0).trim());
-            DataField successor = parseDataField(line.substring(index0 + 1, index1).trim());
+            DataField successor = parseDataField(line.substring(index0 + 2, index1).trim());
             int weight = parseWeight(line.substring(index1 + 1).trim());
             instruction = new Instruction(predecessor, successor, weight);
         }
         return instruction;
     }
 
-    private DataField parseDataField(String string) {
-        return new DataField(string);
+    private DataField parseDataField(String key) {
+        return new DataField(key, VDF.getName(key));
     }
 
     private int parseWeight(String value) {

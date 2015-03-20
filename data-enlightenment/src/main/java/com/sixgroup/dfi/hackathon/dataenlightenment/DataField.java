@@ -14,58 +14,36 @@ public class DataField implements Comparable<DataField> {
 
     // --- Fields --------------------------------------------------------------
 
-    private final String name;
+    private final String key;
+    private String name;
 
     // --- Constructors --------------------------------------------------------
 
-    public DataField(String name) {
+    public DataField(String key, String name) {
+        super();
+        this.key = key;
         this.name = name;
     }
 
     // --- Properties ----------------------------------------------------------
 
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
+    public String getKey() {
+        return key;
     }
 
-    // --- Creation ------------------------------------------------------------
+    public String getName() {
+        return name != null ? name : key;
+    }
 
-    // --- Addition ------------------------------------------------------------
-
-    // --- Access --------------------------------------------------------------
-
-    // --- Examination ---------------------------------------------------------
-
-    // --- Editing -------------------------------------------------------------
-
-    // --- Removal -------------------------------------------------------------
-
-    // --- Measurement ---------------------------------------------------------
-
-    // --- Status report -------------------------------------------------------
-
-    // --- Status setting ------------------------------------------------------
-
-    // --- Cursor movement -----------------------------------------------------
-
-    // --- Actions -------------------------------------------------------------
-
-    // --- Basic operations ----------------------------------------------------
-
-    // --- Miscellaneous -------------------------------------------------------
-
-    // --- Transformation ------------------------------------------------------
-
-    // --- Observation ---------------------------------------------------------
+    public void setName(String name) {
+        this.name = name;
+    }
 
     // --- Comparison ----------------------------------------------------------
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return key.hashCode();
     }
 
     @Override
@@ -74,35 +52,25 @@ public class DataField implements Comparable<DataField> {
     }
 
     public boolean equals(DataField other) {
-        return other != null && this.name.equals(other.name);
+        return other != null && this.key.equals(other.key);
     }
 
     @Override
     public int compareTo(DataField other) {
         if (other == null)
             return -1;
-        return this.name.compareTo(other.name);
+        return this.key.compareTo(other.key);
     }
-
-    // --- Duplication ---------------------------------------------------------
-
-    // --- Conversion ----------------------------------------------------------
 
     // --- Display -------------------------------------------------------------
 
     @Override
     public String toString() {
-        return name;
+        StringBuilder sb = new StringBuilder();
+        sb.append(key);
+        if (name != null)
+            sb.append(": ").append(name);
+        return sb.toString();
     }
-
-    // --- Serialization -------------------------------------------------------
-
-    // --- Initialization ------------------------------------------------------
-
-    // --- Finalization --------------------------------------------------------
-
-    // --- Private implementation ----------------------------------------------
-
-    // --- Inner types ---------------------------------------------------------
 
 }

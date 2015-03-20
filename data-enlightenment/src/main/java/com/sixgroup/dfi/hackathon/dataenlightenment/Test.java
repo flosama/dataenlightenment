@@ -9,8 +9,10 @@ package com.sixgroup.dfi.hackathon.dataenlightenment;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import com.sixgroup.dfi.hackathon.dataenlightenment.gen.DataGenerator;
+import com.sixgroup.dfi.hackathon.dataenlightenment.gen.Instruction;
 import com.sixgroup.dfi.hackathon.dataenlightenment.gen.InstructionParser;
 import com.sixgroup.dfi.hackathon.dataenlightenment.gen.Instructions;
 
@@ -23,7 +25,8 @@ public class Test {
         DataService dataService = new GraphDataService();
         DataGenerator generator = new DataGenerator(dataService);
         InstructionParser parser = new InstructionParser();
-        Instructions instructions = parser.parseInstructions(new File(args[0]));
+        List<Instruction> instructionList = parser.parseInstructions(new File(args[0]));
+        Instructions instructions = new Instructions(instructionList);
         generator.generateData(instructions, 100);
     }
 

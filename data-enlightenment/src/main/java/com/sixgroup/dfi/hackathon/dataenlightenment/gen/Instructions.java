@@ -7,8 +7,9 @@
  */
 package com.sixgroup.dfi.hackathon.dataenlightenment.gen;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +25,18 @@ public class Instructions {
 
     // --- Fields --------------------------------------------------------------
 
-    private final Map<DataField, List<Instruction>> instructions = new HashMap<>();
+    private final Map<DataField, List<Instruction>> instructions = new LinkedHashMap<>();
 
     // --- Constructors --------------------------------------------------------
+
+    public Instructions() {
+        super();
+    }
+
+    public Instructions(List<Instruction> instructions) {
+        this();
+        insertInstructions(instructions);
+    }
 
     // --- Properties ----------------------------------------------------------
 
@@ -44,6 +54,11 @@ public class Instructions {
         if (instructions == null)
             this.instructions.put(predecessor, instructions = new LinkedList<>());
         instructions.add(instruction);
+    }
+
+    public void insertInstructions(Collection<Instruction> instructions) {
+        for (Instruction instruction : instructions)
+            insertInstruction(instruction);
     }
 
     // --- Access --------------------------------------------------------------

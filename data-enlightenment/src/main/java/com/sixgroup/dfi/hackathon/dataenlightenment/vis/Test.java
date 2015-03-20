@@ -52,7 +52,7 @@ public class Test {
             DataService dataService = new GraphDataService();
             DataGenerator generator = new DataGenerator(dataService);
             InstructionParser parser = new InstructionParser();
-            Instructions instructions = parser.parseInstructions(new File(args[0]));
+            Instructions instructions = new Instructions(parser.parseInstructions(new File(args[0])));
             generator.generateData(instructions, 100);
 
             UsageGraph graph = dataService.getGraph();
