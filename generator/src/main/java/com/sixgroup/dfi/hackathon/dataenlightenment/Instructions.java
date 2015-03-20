@@ -55,13 +55,15 @@ public class Instructions {
     public DataField getField(DataField predecessor, double probability) {
         assert 0.0 <= probability && probability <= 1.0;
         List<Instruction> tuples = instructions.get(predecessor);
-        int total = calculateTotal(tuples);
-        int position = (int) (total * probability);
-        int count = 0;
-        for (Instruction tuple : tuples) {
-            count += tuple.getWeight();
-            if (position <= count)
-                return tuple.getSuccessor();
+        if (tuples != null) {
+            int total = calculateTotal(tuples);
+            int position = (int) (total * probability);
+            int count = 0;
+            for (Instruction tuple : tuples) {
+                count += tuple.getWeight();
+                if (position <= count)
+                    return tuple.getSuccessor();
+            }
         }
         return null;
     }
