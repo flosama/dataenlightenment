@@ -59,6 +59,17 @@ public class UsageGraph {
 
     // --- Access --------------------------------------------------------------
 
+    public int getWeight(DataField predecessor, DataField successor) {
+        IVertex<DataField> origin = getVertex(predecessor);
+        IVertex<DataField> destination = getVertex(successor);
+        IEdge<Integer> edge = graph.getEdge(origin, destination );
+        return edge != null ? edge.getElement().intValue() : 0;
+    }
+    
+    public Iterable<? extends IEdge<Integer>> getEdges() {
+        return graph.edges();
+    }
+    
     public Set<DataField> getVertices() {
         return Collections.unmodifiableSet(vertices.keySet());
     }
