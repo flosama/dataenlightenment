@@ -1,27 +1,31 @@
 /*------------------------------------------------------------------------------
  * Project  : Data Enlightenment
- * Component: api
+ * Component: data-enlightenment
  * Author   : saynoom
- * Creation : 20.03.2015 19:35:19
+ * Creation : 20.03.2015 23:14:40
  *------------------------------------------------------------------------------
  */
 package com.sixgroup.dfi.hackathon.dataenlightenment;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import net.sf.jdsc.AdjacencyList;
+import net.sf.jdsc.IEdge;
+import net.sf.jdsc.IGraph;
+import net.sf.jdsc.IVertex;
+
 /**
  * @author saynoom
  */
-public class DataService {
+public class UsageGraph {
 
     // --- Fields --------------------------------------------------------------
 
-    private final UsageGraph graph = new UsageGraph();
-    private DataField lastAccessedField = null;
+    private final IGraph<DataField, Integer> graph = new AdjacencyList<>();
+    private final Map<DataField, IVertex<DataField>> vertices = new HashMap<>();
 
     // --- Constructors --------------------------------------------------------
-
-    public DataService() {
-        super();
-    }
 
     // --- Properties ----------------------------------------------------------
 
@@ -29,26 +33,29 @@ public class DataService {
 
     // --- Addition ------------------------------------------------------------
 
-    // --- Access --------------------------------------------------------------
-
-    /**
-     * Requests the data of the specified {@link DataField field}.
-     * 
-     * @param field
-     *            The {@link DataField} to access.
-     * @return the data of the specified {@link DataField field}.
-     */
-    public String getData(DataField field) {
-        if (lastAccessedField != null) {
-            DataField predecessor = this.lastAccessedField;
-            DataField successor = field;
-            graph.insert(predecessor, successor);
+    public void insert(DataField predecessor, DataField successor) {
+        IVertex<DataField> origin = getVertex(predecessor);
+        IVertex<DataField> destination = getVertex(successor);
+        IEdge<Integer> edge = graph.getEdge(origin, destination);
+        if (edge == null) {
+            edge = graph.insertEdge(origin, destination, 1);
+        } else {
+            int count = edge.getElement();
+            count++;
+            edge.setElement(count);
         }
-        this.lastAccessedField = field;
-
-        // TODO return the requested data
-        return "Data of " + field;
     }
+
+    private IVertex<DataField> getVertex(DataField field) {
+        IVertex<DataField> vertex = vertices.get(field);
+        if (vertex == null) {
+            vertex = graph.insertVertex(field);
+            vertices.put(field, vertex);
+        }
+        return vertex;
+    }
+
+    // --- Access --------------------------------------------------------------
 
     // --- Examination ---------------------------------------------------------
 
