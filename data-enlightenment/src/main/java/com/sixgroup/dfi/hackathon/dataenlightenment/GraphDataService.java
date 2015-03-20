@@ -1,35 +1,27 @@
 /*------------------------------------------------------------------------------
  * Project  : Data Enlightenment
- * Component: generator
+ * Component: api
  * Author   : saynoom
- * Creation : 20.03.2015 20:32:22
+ * Creation : 20.03.2015 19:35:19
  *------------------------------------------------------------------------------
  */
 package com.sixgroup.dfi.hackathon.dataenlightenment;
 
-import java.io.File;
-import java.io.IOException;
-
-import com.sixgroup.dfi.hackathon.dataenlightenment.gen.DataGenerator;
-import com.sixgroup.dfi.hackathon.dataenlightenment.gen.InstructionParser;
-import com.sixgroup.dfi.hackathon.dataenlightenment.gen.Instructions;
-
 /**
  * @author saynoom
  */
-public class Test {
-
-    public static void main(String[] args) throws IOException {
-        DataService dataService = new GraphDataService();
-        DataGenerator generator = new DataGenerator(dataService);
-        InstructionParser parser = new InstructionParser();
-        Instructions instructions = parser.parseInstructions(new File(args[0]));
-        generator.generateData(instructions, 100);
-    }
+public class GraphDataService implements DataService {
 
     // --- Fields --------------------------------------------------------------
 
+    private final UsageGraph graph = new UsageGraph();
+    private DataField lastAccessedField = null;
+
     // --- Constructors --------------------------------------------------------
+
+    public GraphDataService() {
+        super();
+    }
 
     // --- Properties ----------------------------------------------------------
 
@@ -38,6 +30,20 @@ public class Test {
     // --- Addition ------------------------------------------------------------
 
     // --- Access --------------------------------------------------------------
+
+   
+    @Override
+    public String getData(DataField field) {
+        if (lastAccessedField != null) {
+            DataField predecessor = this.lastAccessedField;
+            DataField successor = field;
+            graph.insert(predecessor, successor);
+        }
+        this.lastAccessedField = field;
+
+        // TODO return the requested data
+        return "Data of " + field;
+    }
 
     // --- Examination ---------------------------------------------------------
 
