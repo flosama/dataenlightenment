@@ -64,11 +64,12 @@ public class InstructionParser {
 
     private Instruction parseInstruction(String line) {
         Instruction instruction = null;
-        String[] parts = line.split("[-=:]");
-        if (parts.length == 3) {
-            DataField predecessor = parseDataField(parts[0]);
-            DataField successor = parseDataField(parts[1]);
-            int weight = parseWeight(parts[2]);
+        int index0 = line.indexOf("->");
+        int index1 = line.indexOf('=');
+        if (index0 >= 0 && index1 >= 0) {
+            DataField predecessor = parseDataField(line.substring(0, index0).trim());
+            DataField successor = parseDataField(line.substring(index0 + 1, index1).trim());
+            int weight = parseWeight(line.substring(index1 + 1).trim());
             instruction = new Instruction(predecessor, successor, weight);
         }
         return instruction;
