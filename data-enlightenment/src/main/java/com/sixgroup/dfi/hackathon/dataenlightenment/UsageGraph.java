@@ -7,8 +7,10 @@
  */
 package com.sixgroup.dfi.hackathon.dataenlightenment;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import net.sf.jdsc.AdjacencyList;
 import net.sf.jdsc.IEdge;
@@ -56,6 +58,10 @@ public class UsageGraph {
     }
 
     // --- Access --------------------------------------------------------------
+
+    public Set<DataField> getVertices() {
+        return Collections.unmodifiableSet(vertices.keySet());
+    }
 
     // --- Examination ---------------------------------------------------------
 
