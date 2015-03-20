@@ -2,27 +2,31 @@
  * Project  : Data Enlightenment
  * Component: generator
  * Author   : saynoom
- * Creation : 20.03.2015 19:39:47
+ * Creation : 20.03.2015 19:41:03
  *------------------------------------------------------------------------------
  */
 package com.sixgroup.dfi.hackathon.dataenlightenment;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.security.SecureRandom;
+import java.util.Random;
 
 /**
  * @author saynoom
  */
-public class Instructions {
+public class DataGenerator {
 
     // --- Fields --------------------------------------------------------------
 
-    private final Map<DataField, List<Instruction>> instructions = new HashMap<>();
+    private final DataService dataService;
+
+    private final Random random = new SecureRandom();
 
     // --- Constructors --------------------------------------------------------
+
+    public DataGenerator(DataService dataService) {
+        super();
+        this.dataService = dataService;
+    }
 
     // --- Properties ----------------------------------------------------------
 
@@ -30,48 +34,7 @@ public class Instructions {
 
     // --- Addition ------------------------------------------------------------
 
-    public void insertInstruction(DataField predecessor, DataField successor, int weight) {
-        insertInstruction(new Instruction(predecessor, successor, weight));
-    }
-
-    public void insertInstruction(Instruction instruction) {
-        DataField predecessor = instruction.getPredecessor();
-        List<Instruction> instructions = this.instructions.get(predecessor);
-        if (instructions == null)
-            this.instructions.put(predecessor, instructions = new LinkedList<>());
-        instructions.add(instruction);
-    }
-
     // --- Access --------------------------------------------------------------
-
-    public DataField getField(int index) {
-        DataField field = null;
-        Iterator<DataField> it = instructions.keySet().iterator();
-        for (int i = 0; i <= index && it.hasNext(); i++)
-            field = it.next();
-        return field;
-    }
-
-    public DataField getField(DataField predecessor, double probability) {
-        assert 0.0 <= probability && probability <= 1.0;
-        List<Instruction> tuples = instructions.get(predecessor);
-        int total = calculateTotal(tuples);
-        int position = (int) (total * probability);
-        int count = 0;
-        for (Instruction tuple : tuples) {
-            count += tuple.getWeight();
-            if (position <= count)
-                return tuple.getSuccessor();
-        }
-        return null;
-    }
-
-    private int calculateTotal(List<Instruction> tuples) {
-        int total = 0;
-        for (Instruction tuple : tuples)
-            total += tuple.getWeight();
-        return total;
-    }
 
     // --- Examination ---------------------------------------------------------
 
@@ -80,10 +43,6 @@ public class Instructions {
     // --- Removal -------------------------------------------------------------
 
     // --- Measurement ---------------------------------------------------------
-
-    public int count() {
-        return instructions.size();
-    }
 
     // --- Status report -------------------------------------------------------
 
@@ -94,6 +53,20 @@ public class Instructions {
     // --- Actions -------------------------------------------------------------
 
     // --- Basic operations ----------------------------------------------------
+
+    public void generateData(Instructions instructions, int iterations) {
+        int index = random.nextInt(instructions.count());
+        DataField field = instructions.getField(index);
+        for (int i = 0; i < iterations; i++) {
+            // do the visit
+            dataService.getData(field);
+            field = getRandomField(instructions, field);
+        }
+    }
+
+    private DataField getRandomField(Instructions instructions, DataField predecessor) {
+        return instructions.getField(predecessor, random.nextDouble());
+    }
 
     // --- Miscellaneous -------------------------------------------------------
 
