@@ -31,7 +31,6 @@ public class GraphDataService implements DataService {
 
     // --- Access --------------------------------------------------------------
 
-   
     @Override
     public String getData(DataField field) {
         if (lastAccessedField != null) {
@@ -43,6 +42,11 @@ public class GraphDataService implements DataService {
 
         // TODO return the requested data
         return "Data of " + field;
+    }
+
+    @Override
+    public UsageGraph getGraph() {
+        return graph;
     }
 
     // --- Examination ---------------------------------------------------------
