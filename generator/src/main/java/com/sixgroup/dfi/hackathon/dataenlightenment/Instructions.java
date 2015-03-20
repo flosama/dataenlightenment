@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * @author saynoom
  */
-public class GenerationInstruction {
+public class Instructions {
 
     // --- Fields --------------------------------------------------------------
 
@@ -105,32 +105,5 @@ public class GenerationInstruction {
     // --- Private implementation ----------------------------------------------
 
     // --- Inner types ---------------------------------------------------------
-
-    public static class Instruction {
-
-        private final DataField predecessor;
-        private final DataField successor;
-        private final int weight;
-
-        public Instruction(DataField predecessor, DataField successor, int weight) {
-            super();
-            this.predecessor = predecessor;
-            this.successor = successor;
-            this.weight = weight;
-        }
-
-        public DataField getPredecessor() {
-            return predecessor;
-        }
-
-        public DataField getSuccessor() {
-            return successor;
-        }
-
-        public int getWeight() {
-            return weight;
-        }
-
-    }
 
 }
