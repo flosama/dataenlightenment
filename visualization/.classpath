@@ -2,5 +2,6 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry including="**/*.java" kind="src" path="src/main/java"/>
+	<classpathentry kind="lib" path="C:/devel/lib/common-graphviz-1.0.0-20150319.230233-419.jar" sourcepath="C:/devel/lib/common-graphviz-1.0.0-20150319.230233-419-sources.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
