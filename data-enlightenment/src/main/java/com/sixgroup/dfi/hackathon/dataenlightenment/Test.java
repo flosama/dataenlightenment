@@ -5,13 +5,14 @@
  * Creation : 20.03.2015 20:32:22
  *------------------------------------------------------------------------------
  */
-package com.sixgroup.dfi.hackathon.dataenlightenment.gen;
+package com.sixgroup.dfi.hackathon.dataenlightenment;
 
 import java.io.File;
 import java.io.IOException;
 
-import com.sixgroup.dfi.hackathon.dataenlightenment.DataField;
-import com.sixgroup.dfi.hackathon.dataenlightenment.DataService;
+import com.sixgroup.dfi.hackathon.dataenlightenment.gen.DataGenerator;
+import com.sixgroup.dfi.hackathon.dataenlightenment.gen.InstructionParser;
+import com.sixgroup.dfi.hackathon.dataenlightenment.gen.Instructions;
 
 /**
  * @author saynoom
@@ -19,14 +20,7 @@ import com.sixgroup.dfi.hackathon.dataenlightenment.DataService;
 public class Test {
 
     public static void main(String[] args) throws IOException {
-        DataService dataService = new DataService() {
-
-            @Override
-            public String getData(DataField field) {
-                System.out.print(field + " -> ");
-                return null;
-            }
-        };
+        DataService dataService = new DataService();
         DataGenerator generator = new DataGenerator(dataService);
         InstructionParser parser = new InstructionParser();
         Instructions instructions = parser.parseInstructions(new File(args[0]));
