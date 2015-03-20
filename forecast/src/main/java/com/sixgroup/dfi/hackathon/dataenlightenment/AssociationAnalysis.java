@@ -1,13 +1,23 @@
+/*------------------------------------------------------------------------------
+ * Project  : Data Enlightenment
+ * Component: forecast
+ * Author   : pangody
+ * Creation : 20.03.2015 20:50:57
+ *------------------------------------------------------------------------------
+ */
 package com.sixgroup.dfi.hackathon.dataenlightenment;
 
+/**
+ * @author pangody
+ */
 public class AssociationAnalysis {
 
     // TODO A Priori algorithm for generating the frequent item sets
-    
+
     // TODO Generating the rules using the frequent item sets
-    
+
     // TODO Calculating support, confidence and lift of the found rules
-    
+
     // --- Fields --------------------------------------------------------------
 
     // --- Constructors --------------------------------------------------------
