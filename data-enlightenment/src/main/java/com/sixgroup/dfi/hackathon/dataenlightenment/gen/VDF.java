@@ -10,7 +10,9 @@ package com.sixgroup.dfi.hackathon.dataenlightenment.gen;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -42,6 +44,10 @@ public class VDF {
 
     public static String getName(String key) {
         return MAPPING.get(key);
+    }
+
+    public static Set<String> getKeys() {
+        return Collections.unmodifiableSet(MAPPING.keySet());
     }
 
 }
