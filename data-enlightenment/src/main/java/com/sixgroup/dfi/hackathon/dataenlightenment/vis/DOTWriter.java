@@ -80,15 +80,17 @@ public class DOTWriter extends FilterWriter {
             write('[');
 
             write("penwidth=");
-            String count = edge.getElement().toString();
-            write(count);
+            float count = edge.getElement();
+            count /= 2;
+            String penwidth = Float.toString(count);
+            write(penwidth);
 
             write(']');
             write(';');
             write('\n');
         }
 
-        write("}");
+        write('}');
         flush();
     }
 
