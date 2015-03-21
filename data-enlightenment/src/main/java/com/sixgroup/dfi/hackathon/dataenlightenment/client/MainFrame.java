@@ -8,7 +8,6 @@
 package com.sixgroup.dfi.hackathon.dataenlightenment.client;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.ByteArrayInputStream;
@@ -23,7 +22,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -62,14 +60,15 @@ public class MainFrame extends JFrame {
     private final Instructions instructions;
 
     private JPanel rootPanel;
-    private JPanel contentCard;
+    private JTabbedPane contentCard;
     private JPanel buttonCard;
-    private JTabbedPane tabsPanel;
 
     private JPanel graphvizPanel;
     private JPanel markovPanel;
 
     private JButton generateButton;
+
+    private JButton generate;
     private JButton exit;
 
     private Action generateAction;
@@ -149,21 +148,16 @@ public class MainFrame extends JFrame {
         rootPanel = new JPanel();
         rootPanel.setLayout(new BorderLayout());
 
-        contentCard = new JPanel();
-        buttonCard = new JPanel();
-
-        tabsPanel = new JTabbedPane();
-
+        contentCard = new JTabbedPane();
         markovPanel = new JPanel();
+        contentCard.addTab("Forecast", markovPanel);
         graphvizPanel = new JPanel();
-        initButtons();
-
-        tabsPanel.addTab("Forecast", markovPanel);
-        tabsPanel.addTab("Graphical Representation", graphvizPanel);
-        contentCard.add(tabsPanel);
-
+        contentCard.addTab("Graphical Representation", graphvizPanel);
         rootPanel.add(contentCard, BorderLayout.CENTER);
+
+        buttonCard = new JPanel();
         rootPanel.add(buttonCard, BorderLayout.SOUTH);
+        initButtons();
 
         this.add(rootPanel);
     }
