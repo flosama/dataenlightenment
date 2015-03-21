@@ -21,9 +21,4 @@ public interface DataService {
      */
     public String getData(DataField field);
 
-    /**
-     * @return
-     */
-    public UsageGraph getGraph();
-
 }

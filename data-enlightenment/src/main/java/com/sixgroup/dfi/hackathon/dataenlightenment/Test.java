@@ -22,7 +22,8 @@ import com.sixgroup.dfi.hackathon.dataenlightenment.gen.Instructions;
 public class Test {
 
     public static void main(String[] args) throws IOException {
-        DataService dataService = new GraphDataService();
+        UsageGraph graph = new UsageGraph();
+        GraphDataService dataService = new GraphDataService(graph);
         DataGenerator generator = new DataGenerator(dataService);
         InstructionParser parser = new InstructionParser();
         List<Instruction> instructionList = parser.parseInstructions(new File(args[0]));
