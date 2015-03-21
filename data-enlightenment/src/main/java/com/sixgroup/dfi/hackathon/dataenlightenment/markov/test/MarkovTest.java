@@ -32,18 +32,18 @@ public class MarkovTest {
         DataField suffix1 = new DataField("56", "suffix1");
         DataField suffix2 = new DataField("78", "suffix2");
 
-        for (int i = 0; i < 70; ++i) {
+        for (int i = 0; i < 700; ++i) {
             chain.increment(prefix, suffix1);
         }
 
-        for (int i = 0; i < 30; ++i) {
+        for (int i = 0; i < 300; ++i) {
             chain.increment(prefix, suffix2);
         }
 
         int count1 = 0;
         int count2 = 0;
 
-        for (int i = 0; i < 100; ++i) {
+        for (int i = 0; i < 1000; ++i) {
             DataField suffix = chain.getNextField(prefix);
             if (suffix != null && suffix.equals(suffix1)) {
                 ++count1;
@@ -53,8 +53,8 @@ public class MarkovTest {
             }
         }
         
-        System.out.println("Suffix 1 chosen (should be near 70): " + count1);
-        System.out.println("Suffix 2 chosen (should be near 30): " + count2);
+        System.out.println("Suffix 1 chosen (should be near 700): " + count1);
+        System.out.println("Suffix 2 chosen (should be near 300): " + count2);
     }
 
 }
