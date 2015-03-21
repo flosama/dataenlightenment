@@ -11,7 +11,6 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,7 +23,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
 
 
 import javax.swing.AbstractAction;
@@ -72,8 +70,6 @@ public class MainFrame extends JFrame {
     private JPanel markovPanel;
 
     private JButton generateButton;
-
-    private JButton generate;
     private JButton exit;
 
     private Action generateAction;
@@ -165,7 +161,7 @@ public class MainFrame extends JFrame {
         tabsPanel.addTab("Forecast", markovPanel);
         tabsPanel.addTab("Graphical Representation", graphvizPanel);
         contentCard.add(tabsPanel);
-        
+
         rootPanel.add(contentCard, BorderLayout.CENTER);
         rootPanel.add(buttonCard, BorderLayout.SOUTH);
 
@@ -185,21 +181,29 @@ public class MainFrame extends JFrame {
 
         generateAction = new AbstractAction("Generate") {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                
-            }};
-            
-        buttonCard = new JPanel();
-        exitAction = new AbstractAction("Exit") {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = -8507010632269506221L;
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                
+                generateGraphics();
             }
-            
+        };
+
+        exitAction = new AbstractAction("Exit") {
+
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1032171808150985393L;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+
         };
 
     }
