@@ -9,6 +9,8 @@ package com.sixgroup.dfi.hackathon.dataenlightenment.client;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -21,6 +23,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -64,8 +70,13 @@ public class MainFrame extends JFrame {
     private JPanel graphvizPanel;
     private JPanel markovPanel;
 
+    private JButton generateButton;
+
     private JButton generate;
     private JButton exit;
+
+    private Action generateAction;
+    private Action exitAction;
 
     // --- Constructors --------------------------------------------------------
 
@@ -73,8 +84,8 @@ public class MainFrame extends JFrame {
         super();
         this.instructions = instructions;
         initSelf();
+        initActions();
         initComponents();
-        initGraphics();
     }
 
     // --- Properties ----------------------------------------------------------
@@ -141,6 +152,9 @@ public class MainFrame extends JFrame {
         rootPanel = new JPanel();
         rootPanel.setLayout(new CardLayout());
 
+        contentCard = new JPanel();
+        buttonCard = new JPanel();
+
         tabsPanel = new JTabbedPane();
 
         markovPanel = new JPanel();
@@ -149,22 +163,47 @@ public class MainFrame extends JFrame {
 
         tabsPanel.addTab("Forecast", markovPanel);
         tabsPanel.addTab("Graphical Representation", graphvizPanel);
+        contentCard.add(tabsPanel);
+        
+        rootPanel.add(contentCard, CONTENTPANEL);
+        rootPanel.add(buttonCard, BUTTONPANEL);
 
         this.add(rootPanel);
     }
 
     private void initButtons() {
-        generate = new JButton();
-        exit = new JButton();
+        generateButton = new JButton(generateAction);
+        exit = new JButton(exitAction);
 
-        // TODO init actions
-        buttonCard = new JPanel();
-        buttonCard.add(generate);
+        buttonCard.add(generateButton);
         buttonCard.add(exit);
 
     }
 
-    private void initGraphics() {
+    private void initActions() {
+
+        generateAction = new AbstractAction("Generate") {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                
+            }};
+            
+        buttonCard = new JPanel();
+        exitAction = new AbstractAction("Exit") {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                
+            }
+            
+        };
+
+    }
+
+    protected void generateGraphics() {
         try {
             MediaType format = new MediaType("image", "png");
             DOT executable = new DOT("neato");
