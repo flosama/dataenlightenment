@@ -73,6 +73,7 @@ public class Test {
 
             JLabel jImage = new JLabel(new ImageIcon(out2.toByteArray()));
             JFrame jFrame = new JFrame("Graph Visu");
+            jFrame.setSize(800, 600);
             jFrame.add(jImage);
             jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             jFrame.setVisible(true);

@@ -10,8 +10,6 @@ package com.sixgroup.dfi.hackathon.dataenlightenment.vis;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import net.sf.jdsc.IEdge;
 
@@ -65,12 +63,29 @@ public class DOTWriter extends FilterWriter {
         Iterable<? extends IEdge<Integer>> edges = graph.getEdges();
         for (IEdge<Integer> edge : edges) {
             write(INDENT);
+
             DataField origin = (DataField) edge.getOrigin().getElement();
+            write('\"');
             write(origin.getName());
+            write('\"');
+
             write(CONNECTOR);
+
             DataField destination = (DataField) edge.getDestination().getElement();
+            write('\"');
             write(destination.getName());
-            write(";\n");
+            write('\"');
+
+            write(' ');
+            write('[');
+
+            write("penwidth=");
+            String count = edge.getElement().toString();
+            write(count);
+
+            write(']');
+            write(';');
+            write('\n');
         }
 
         write("}");
@@ -98,29 +113,6 @@ public class DOTWriter extends FilterWriter {
     // --- Finalization --------------------------------------------------------
 
     // --- Private implementation ----------------------------------------------
-
-    private void writeAttributes(Writer writer, String indent, Map<String, String> attributes) throws IOException {
-        for (Entry<String, String> attribute : attributes.entrySet()) {
-            writer.write(indent);
-            writer.write(attribute.getKey());
-            writer.write("=");
-            writer.write(attribute.getValue());
-            writer.write(";\n");
-        }
-    }
-
-    private void writeAttributes(Writer writer, Map<String, String> attributes) throws IOException {
-        for (Entry<String, String> attribute : attributes.entrySet()) {
-            writer.write(", ");
-            writer.write(attribute.getKey());
-            writer.write("=");
-            writer.write(attribute.getValue());
-        }
-    }
-
-    private String toString(int value) {
-        return "Node" + Integer.toString(value, 16).replace('-', '_');
-    }
 
     // --- Inner types ---------------------------------------------------------
 
