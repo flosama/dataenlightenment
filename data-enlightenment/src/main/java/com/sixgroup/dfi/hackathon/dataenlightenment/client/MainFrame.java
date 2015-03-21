@@ -68,7 +68,6 @@ public class MainFrame extends JFrame {
 
     private JButton generateButton;
 
-    private JButton generate;
     private JButton exit;
 
     private Action generateAction;
