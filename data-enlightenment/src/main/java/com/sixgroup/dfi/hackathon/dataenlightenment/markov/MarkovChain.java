@@ -8,6 +8,7 @@
 package com.sixgroup.dfi.hackathon.dataenlightenment.markov;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Random;
 
 import com.sixgroup.dfi.hackathon.dataenlightenment.DataField;
@@ -80,6 +81,17 @@ public class MarkovChain {
         return totalCount;
     }
 
+    public DataFieldTuple getRandomPrefix() {
+        int numberOfPrefixes = continuations.keySet().size();
+        Random random = new Random();
+        int randomIndex = random.nextInt(numberOfPrefixes);
+        Iterator<DataFieldTuple> iterator = continuations.keySet().iterator();
+        DataFieldTuple prefix = iterator.next();
+        for (int i = 0; i < randomIndex; i++) {
+            prefix = iterator.next();
+        }
+        return prefix;
+    }
     // --- Examination ---------------------------------------------------------
 
     // --- Editing -------------------------------------------------------------
