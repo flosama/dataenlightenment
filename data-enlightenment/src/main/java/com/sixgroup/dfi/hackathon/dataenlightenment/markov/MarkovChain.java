@@ -40,7 +40,7 @@ public class MarkovChain {
         if (existingSuffices != null) {
             if (existingSuffices.containsKey(suffix)) {
                 Integer count = existingSuffices.get(suffix);
-                count += 1;
+                existingSuffices.put(suffix, count += 1);
             }
             else {
                 existingSuffices.put(suffix, new Integer(1));
@@ -66,19 +66,13 @@ public class MarkovChain {
             totalCount += count;
         }
         int randomLimit = rnd.nextInt(totalCount);
-        randomLimit += 1;
-        DataField randomSuffix = null;
+        int x = 0;
         for (DataField field : suffices.keySet()) {
-            int currentCount = suffices.get(field);
-            if (randomLimit > currentCount) {
-                randomLimit -= currentCount;
-            }
-            else {
-                randomSuffix = field;
-                break;
-            }
+            if (x >= randomLimit)
+                return field;
+            x += suffices.get(field);
         }
-        return randomSuffix;
+        return null;
     }
 
     // --- Examination ---------------------------------------------------------
