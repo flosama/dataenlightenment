@@ -204,6 +204,7 @@ public class MainFrame extends JFrame {
             Future<Image> imageFuture = renderingEngine.renderImage(new ByteArrayInputStream(graphData));
 
             ImageIcon image = toAWTImage(imageFuture.get());
+            graphvizPanel.removeAll();
             graphvizPanel.add(new JLabel(image));
         } catch (InterruptedException | ExecutionException | IOException e) {
             throw new IllegalStateException("Could not generate image.", e);
