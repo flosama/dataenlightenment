@@ -30,7 +30,10 @@ public class MarkovDataService implements DataService {
 
     @Override
     public String getData(DataField field) {
-        // FIXME @flo
+        StringBuilder bob = new StringBuilder();
+        bob.append(field).append(markovChain.getNextField(new DataFieldTuple(new DataField[]{field})))
+            .append(", sure...");
+        return bob.toString();
     }
 
     // --- Examination ---------------------------------------------------------

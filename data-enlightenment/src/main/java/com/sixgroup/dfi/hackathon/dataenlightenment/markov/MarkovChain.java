@@ -9,7 +9,6 @@ package com.sixgroup.dfi.hackathon.dataenlightenment.markov;
 
 import java.util.HashMap;
 import java.util.Random;
-import java.util.Vector;
 
 import com.sixgroup.dfi.hackathon.dataenlightenment.DataField;
 
