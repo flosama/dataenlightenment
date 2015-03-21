@@ -137,10 +137,10 @@ public class MainFrame extends JFrame {
         rootPanel.setLayout(new BorderLayout());
 
         JTabbedPane contentCard = new JTabbedPane();
-        markovPanel = new JPanel();
-        contentCard.addTab("Forecast", markovPanel);
         graphvizPanel = new JPanel();
         contentCard.addTab("Graphical Representation", graphvizPanel);
+        markovPanel = new JPanel();
+        contentCard.addTab("Forecast", markovPanel);
         rootPanel.add(contentCard, BorderLayout.CENTER);
 
         JPanel buttonCard = new JPanel();
@@ -163,9 +163,6 @@ public class MainFrame extends JFrame {
 
         generateAction = new AbstractAction("Generate") {
 
-            /**
-             * 
-             */
             private static final long serialVersionUID = -8507010632269506221L;
 
             @Override
@@ -191,45 +188,46 @@ public class MainFrame extends JFrame {
     }
 
     protected void generateGraphics() {
+        MediaType format = new MediaType("image", "png");
+        DOT executable = new DOT("neato");
+        BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(100);
+        ExecutorService executor = new ThreadPoolExecutor(100, 200, 5000, TimeUnit.SECONDS, workQueue);
+        RenderingEngine renderingEngine = new RenderingEngine(executor, executable, format);
+
+        UsageGraph graph = new UsageGraph();
+        DataService dataService = new GraphDataService(graph);
+        DataGenerator generator = new DataGenerator(dataService);
+        generator.generateData(instructions, 100);
+
         try {
-            MediaType format = new MediaType("image", "png");
-            DOT executable = new DOT("neato");
-            BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(100);
-            ExecutorService executor = new ThreadPoolExecutor(100, 200, 5000, TimeUnit.SECONDS, workQueue);
-            RenderingEngine renderingEngine = new RenderingEngine(executor, executable, format);
-
-            UsageGraph graph = new UsageGraph();
-            DataService dataService = new GraphDataService(graph);
-            DataGenerator generator = new DataGenerator(dataService);
-            generator.generateData(instructions, 100);
-
-            ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
-            try (DOTWriter dotWriter = new DOTWriter(new OutputStreamWriter(out))) {
-                dotWriter.write(graph);
-            }
-
-            byte[] graphData = out.toByteArray();
+            byte[] graphData = generateDOTFile(graph);
             Future<Image> imageFuture = renderingEngine.renderImage(new ByteArrayInputStream(graphData));
 
-            Image image = imageFuture.get();
-            try (InputStream in = image.openInputStream()) {
-                ByteArrayOutputStream out2 = new ByteArrayOutputStream();
-                int read;
-                while ((read = in.read()) != -1)
-                    out2.write(read);
-                JLabel jImage = new JLabel(new ImageIcon(out2.toByteArray()));
-                graphvizPanel.add(jImage);
-                jImage.setVisible(true);
-                graphvizPanel.setVisible(true);
-            } catch (IOException e) {
-                // TODO not generated, change it anyway
-                e.printStackTrace();
-            }
-        } catch (InterruptedException
-                | IOException
-                | ExecutionException e) {
+            ImageIcon image = toAWTImage(imageFuture.get());
+            graphvizPanel.add(new JLabel(image));
+        } catch (InterruptedException | ExecutionException | IOException e) {
+            throw new IllegalStateException("Could not generate image.", e);
+        }
+    }
 
-            e.printStackTrace();
+    private byte[] generateDOTFile(UsageGraph graph) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
+                DOTWriter dotWriter = new DOTWriter(new OutputStreamWriter(out))) {
+            dotWriter.write(graph);
+            dotWriter.close();
+            return out.toByteArray();
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not gneerate DOT.", e);
+        }
+    }
+
+    private ImageIcon toAWTImage(Image image) throws IOException {
+        try (InputStream in = image.openInputStream()) {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            int read;
+            while ((read = in.read()) != -1)
+                out.write(read);
+            return new ImageIcon(out.toByteArray());
         }
     }
 
