@@ -43,7 +43,7 @@ public class Test {
     public static void main(String[] args) {
         try {
             MediaType format = new MediaType("image", "png");
-            DOT executable = new DOT();
+            DOT executable = new DOT("neato");
             BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(100);
             ExecutorService executor = new ThreadPoolExecutor(100, 200, 5000, TimeUnit.SECONDS, workQueue);
             RenderingEngine renderingEngine = new RenderingEngine(executor, executable, format);

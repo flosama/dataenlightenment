@@ -57,10 +57,10 @@ public class DOTWriter extends FilterWriter {
 
     public void write(UsageGraph graph) throws IOException {
         write("digraph {\n");
-        write("size=\"12,8\"\n");
         long graphId = graph.hashCode();
         write("id=\"" + graphId + "\";\n");
-
+        write("size=\"10,16\"\n");
+        write("edge [len=2];\n");
         Iterable<? extends IEdge<Integer>> edges = graph.getEdges();
         for (IEdge<Integer> edge : edges) {
             write(INDENT);

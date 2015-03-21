@@ -44,7 +44,7 @@ public class DataGenerator {
     }
 
     private DataField getRandomField(Instructions instructions, DataField predecessor) {
-        return instructions.getField(predecessor, random.nextDouble());
+        return instructions.getField(predecessor, random.nextDouble() * random.nextDouble());
     }
 
 }
