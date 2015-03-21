@@ -49,17 +49,17 @@ public class Test {
             ExecutorService executor = new ThreadPoolExecutor(100, 200, 5000, TimeUnit.SECONDS, workQueue);
             RenderingEngine renderingEngine = new RenderingEngine(executor, executable, format);
 
-            DataService dataService = new GraphDataService();
+            UsageGraph graph = new UsageGraph();
+            DataService dataService = new GraphDataService(graph);
             DataGenerator generator = new DataGenerator(dataService);
             InstructionParser parser = new InstructionParser();
             Instructions instructions = new Instructions(parser.parseInstructions(new File(args[0])));
             generator.generateData(instructions, 100);
 
-            UsageGraph graph = dataService.getGraph();
-
             ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
-            DOTWriter dotWriter = new DOTWriter(new OutputStreamWriter(out));
-            dotWriter.write(graph);
+            try (DOTWriter dotWriter = new DOTWriter(new OutputStreamWriter(out))) {
+                dotWriter.write(graph);
+            }
 
             byte[] graphData = out.toByteArray();
             Future<Image> imageFuture = renderingEngine.renderImage(new ByteArrayInputStream(graphData));
