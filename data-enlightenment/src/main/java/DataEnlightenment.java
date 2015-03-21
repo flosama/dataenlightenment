@@ -7,11 +7,15 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.List;
 
+import com.sixgroup.dfi.hackathon.dataenlightenment.DataService;
+import com.sixgroup.dfi.hackathon.dataenlightenment.UsageGraph;
 import com.sixgroup.dfi.hackathon.dataenlightenment.client.MainFrame;
+import com.sixgroup.dfi.hackathon.dataenlightenment.gen.DataGenerator;
 import com.sixgroup.dfi.hackathon.dataenlightenment.gen.Instruction;
 import com.sixgroup.dfi.hackathon.dataenlightenment.gen.InstructionGenerator;
 import com.sixgroup.dfi.hackathon.dataenlightenment.gen.InstructionParser;
 import com.sixgroup.dfi.hackathon.dataenlightenment.gen.Instructions;
+import com.sixgroup.dfi.hackathon.dataenlightenment.markov.MarkovChain;
 
 /*------------------------------------------------------------------------------
  * Project  : Data Enlightenment
@@ -28,10 +32,18 @@ public class DataEnlightenment {
 
     private static final int NUMBER_OF_INSTRUCTIONS = 400;
     private static final int MAX_WEIGHT = 40;
+    private static final int MARKOV_DEGREE = 2;
+    private static final int FORECAST_ITERATIONS = 4;
 
     public static void main(String[] args) throws IOException {
         Instructions instructions = generateInstructions();
-        MainFrame jarvis = new MainFrame(instructions);
+
+        UsageGraph usageGraph = new UsageGraph();
+
+        MarkovChain markovChain = new MarkovChain();
+        DataService dataService = learn(instructions, usageGraph, markovChain, MARKOV_DEGREE);
+
+        MainFrame jarvis = new MainFrame(dataService, FORECAST_ITERATIONS);
         jarvis.setVisible(true);
     }
 
@@ -52,6 +64,13 @@ public class DataEnlightenment {
             instructionList = parser.parseInstructions(reader);
         }
         return new Instructions(instructionList);
+    }
+
+    private static DataService learn(Instructions instructions, UsageGraph graph, MarkovChain markovChain, int markovDegree) {
+        DataService dataService = new DataService(graph, markovChain, markovDegree);
+        DataGenerator generator = new DataGenerator(dataService);
+        generator.generateData(instructions, 100);
+        return dataService;
     }
 
 }

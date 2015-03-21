@@ -38,12 +38,12 @@ import com.sixgroup.dfi.common.graphviz.DOT;
 import com.sixgroup.dfi.common.graphviz.Image;
 import com.sixgroup.dfi.common.graphviz.MediaType;
 import com.sixgroup.dfi.common.graphviz.RenderingEngine;
+import com.sixgroup.dfi.hackathon.dataenlightenment.DataField;
 import com.sixgroup.dfi.hackathon.dataenlightenment.DataService;
 import com.sixgroup.dfi.hackathon.dataenlightenment.UsageGraph;
-import com.sixgroup.dfi.hackathon.dataenlightenment.gen.DataGenerator;
-import com.sixgroup.dfi.hackathon.dataenlightenment.gen.Instructions;
+import com.sixgroup.dfi.hackathon.dataenlightenment.markov.DataFieldTuple;
+import com.sixgroup.dfi.hackathon.dataenlightenment.markov.MarkovChain;
 import com.sixgroup.dfi.hackathon.dataenlightenment.vis.DOTWriter;
-import com.sixgroup.dfi.hackathon.dataenlightenment.vis.GraphDataService;
 
 /**
  * @author saynoom
@@ -54,7 +54,10 @@ public class MainFrame extends JFrame {
 
     // --- Fields --------------------------------------------------------------
 
-    private final Instructions instructions;
+    private final DataService dataService;
+    private final int forecastIterations;
+
+    private RenderingEngine renderingEngine;
 
     private JPanel graphvizPanel;
     private JPanel markovPanel;
@@ -64,12 +67,20 @@ public class MainFrame extends JFrame {
 
     // --- Constructors --------------------------------------------------------
 
-    public MainFrame(Instructions instructions) {
+    public MainFrame(DataService dataService, int forecastIterations) {
         super();
-        this.instructions = instructions;
+        this.dataService = dataService;
+        this.forecastIterations = forecastIterations;
+
         initSelf();
         initActions();
         initComponents();
+
+        MediaType format = new MediaType("image", "png");
+        DOT executable = new DOT("neato");
+        BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(100);
+        ExecutorService executor = new ThreadPoolExecutor(100, 200, 5000, TimeUnit.SECONDS, workQueue);
+        this.renderingEngine = new RenderingEngine(executor, executable, format);
     }
 
     // --- Properties ----------------------------------------------------------
@@ -167,7 +178,8 @@ public class MainFrame extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                generateGraphics();
+                generateUsageGraphics();
+                generateForecastGraphics();
             }
         };
 
@@ -187,28 +199,57 @@ public class MainFrame extends JFrame {
 
     }
 
-    protected void generateGraphics() {
-        MediaType format = new MediaType("image", "png");
-        DOT executable = new DOT("neato");
-        BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(100);
-        ExecutorService executor = new ThreadPoolExecutor(100, 200, 5000, TimeUnit.SECONDS, workQueue);
-        RenderingEngine renderingEngine = new RenderingEngine(executor, executable, format);
-
-        UsageGraph graph = new UsageGraph();
-        DataService dataService = new GraphDataService(graph);
-        DataGenerator generator = new DataGenerator(dataService);
-        generator.generateData(instructions, 100);
-
+    void generateUsageGraphics() {
         try {
-            byte[] graphData = generateDOTFile(graph);
-            Future<Image> imageFuture = renderingEngine.renderImage(new ByteArrayInputStream(graphData));
-
-            ImageIcon image = toAWTImage(imageFuture.get());
+            ImageIcon image = renderGraph(dataService.getUsageGraph());
             graphvizPanel.removeAll();
             graphvizPanel.add(new JLabel(image));
         } catch (InterruptedException | ExecutionException | IOException e) {
             throw new IllegalStateException("Could not generate image.", e);
         }
+    }
+
+    void generateForecastGraphics() {
+        UsageGraph forecastGraph = new UsageGraph();
+        MarkovChain markovChain = dataService.getMarkovChain();
+        DataFieldTuple prefix = markovChain.getRandomPrefix();
+        DataField[] prefixFields = prefix.getFields();
+        int markovDegree = prefixFields.length;
+        DataField predecessor = null;
+        DataField successor = null;
+        for (int i = 1; i < markovDegree; i++) {
+            predecessor = prefixFields[i - 1];
+            successor = prefixFields[i];
+            forecastGraph.insert(predecessor, successor);
+        }
+
+        for (int j = 0; j < forecastIterations; j++) {
+            DataField predictedField = markovChain.getNextField(prefix);
+            if (predictedField != null) {
+                predecessor = successor;
+                successor = predictedField;
+                forecastGraph.insert(predecessor, successor);
+                for (int i = 1; i < markovDegree; i++) {
+                    prefixFields[i - 1] = prefixFields[i];
+                }
+                prefixFields[markovDegree - 1] = predictedField;
+            }
+        }
+
+        try {
+            ImageIcon image = renderGraph(forecastGraph);
+            markovPanel.removeAll();
+            markovPanel.add(new JLabel(image));
+        } catch (InterruptedException | ExecutionException | IOException e) {
+            throw new IllegalStateException("Could not generate image.", e);
+        }
+    }
+
+    private ImageIcon renderGraph(UsageGraph graph) throws IOException, InterruptedException, ExecutionException {
+        byte[] graphData = generateDOTFile(graph);
+        Future<Image> imageFuture = renderingEngine.renderImage(new ByteArrayInputStream(graphData));
+        ImageIcon image = toAWTImage(imageFuture.get());
+        return image;
     }
 
     private byte[] generateDOTFile(UsageGraph graph) {
