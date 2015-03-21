@@ -9,6 +9,7 @@ package com.sixgroup.dfi.hackathon.dataenlightenment.markov;
 
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Vector;
 
 import com.sixgroup.dfi.hackathon.dataenlightenment.DataField;
 
@@ -19,7 +20,7 @@ public class MarkovChain {
 
     // --- Fields --------------------------------------------------------------
 
-    private HashMap<DataFieldTuple, HashMap<DataField, Integer>> continuations;
+    private HashMap<DataFieldTuple, HashMap<DataField, DataNode>> continuations;
     private Random rnd;
 
     // --- Constructors --------------------------------------------------------
@@ -36,19 +37,19 @@ public class MarkovChain {
     // --- Addition ------------------------------------------------------------
 
     public void increment(DataFieldTuple prefix, DataField suffix) {
-        HashMap<DataField, Integer> existingSuffices = continuations.get(prefix);
+        HashMap<DataField, DataNode> existingSuffices = continuations.get(prefix);
         if (existingSuffices != null) {
-            if (existingSuffices.containsKey(suffix)) {
-                Integer count = existingSuffices.get(suffix);
-                existingSuffices.put(suffix, count += 1);
+            DataNode oldSuffix = existingSuffices.get(suffix);
+            if (oldSuffix == null) {
+                existingSuffices.put(suffix, new DataNode(suffix));
             }
             else {
-                existingSuffices.put(suffix, new Integer(1));
+                oldSuffix.increment();
             }
         }
         else {
-            HashMap<DataField, Integer> suffices = new HashMap<>();
-            suffices.put(suffix, new Integer(1));
+            HashMap<DataField, DataNode> suffices = new HashMap<>();
+            suffices.put(suffix, new DataNode(suffix));
             continuations.put(prefix, suffices);
         }
 
@@ -57,22 +58,27 @@ public class MarkovChain {
     // --- Access --------------------------------------------------------------
 
     public DataField getNextField(DataFieldTuple prefix) {
-        HashMap<DataField, Integer> suffices = continuations.get(prefix);
+        HashMap<DataField, DataNode> suffices = continuations.get(prefix);
         if (suffices == null) {
             return null;
         }
-        int totalCount = 0;
-        for (Integer count : suffices.values()) {
-            totalCount += count;
-        }
+        int totalCount = getTotalCount(suffices);
         int randomLimit = rnd.nextInt(totalCount);
-        int x = 0;
-        for (DataField field : suffices.keySet()) {
-            if (x >= randomLimit)
-                return field;
-            x += suffices.get(field);
+        for (DataNode node : suffices.values()) {
+            if (randomLimit <= 0 || randomLimit < node.getCount()) {
+                return node.getField();
+            }
+            randomLimit -= node.getCount();
         }
         return null;
+    }
+
+    private int getTotalCount(HashMap<DataField, DataNode> suffices) {
+        int totalCount = 0;
+        for (DataNode node : suffices.values()) {
+            totalCount += node.getCount();
+        }
+        return totalCount;
     }
 
     // --- Examination ---------------------------------------------------------

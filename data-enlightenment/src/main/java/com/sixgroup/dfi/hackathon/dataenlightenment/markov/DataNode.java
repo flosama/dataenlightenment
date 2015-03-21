@@ -17,13 +17,11 @@ public class DataNode {
     private DataField field;
     private int count;
 
-    public DataNode(DataField field, int count) {
+    public DataNode(DataField field) {
         if (field == null)
             throw new IllegalArgumentException("No null value allowed");
-        if (count < 0)
-            throw new IllegalArgumentException("No count values below zero allowed");
         this.field = field;
-        this.count = count;
+        count = 1;
     }
 
     public DataField getField() {
@@ -32,6 +30,10 @@ public class DataNode {
 
     public int getCount() {
         return count;
+    }
+
+    public void increment() {
+        count += 1;
     }
 
     @Override
