@@ -15,6 +15,7 @@ import com.sixgroup.dfi.hackathon.dataenlightenment.gen.DataGenerator;
 import com.sixgroup.dfi.hackathon.dataenlightenment.gen.Instruction;
 import com.sixgroup.dfi.hackathon.dataenlightenment.gen.InstructionParser;
 import com.sixgroup.dfi.hackathon.dataenlightenment.gen.Instructions;
+import com.sixgroup.dfi.hackathon.dataenlightenment.vis.GraphDataService;
 
 /**
  * @author saynoom

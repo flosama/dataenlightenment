@@ -30,7 +30,6 @@ import com.sixgroup.dfi.common.graphviz.Image;
 import com.sixgroup.dfi.common.graphviz.MediaType;
 import com.sixgroup.dfi.common.graphviz.RenderingEngine;
 import com.sixgroup.dfi.hackathon.dataenlightenment.DataService;
-import com.sixgroup.dfi.hackathon.dataenlightenment.GraphDataService;
 import com.sixgroup.dfi.hackathon.dataenlightenment.UsageGraph;
 import com.sixgroup.dfi.hackathon.dataenlightenment.gen.DataGenerator;
 import com.sixgroup.dfi.hackathon.dataenlightenment.gen.InstructionParser;

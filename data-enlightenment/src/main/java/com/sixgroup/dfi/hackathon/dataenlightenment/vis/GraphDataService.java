@@ -5,7 +5,11 @@
  * Creation : 20.03.2015 19:35:19
  *------------------------------------------------------------------------------
  */
-package com.sixgroup.dfi.hackathon.dataenlightenment;
+package com.sixgroup.dfi.hackathon.dataenlightenment.vis;
+
+import com.sixgroup.dfi.hackathon.dataenlightenment.DataField;
+import com.sixgroup.dfi.hackathon.dataenlightenment.DataService;
+import com.sixgroup.dfi.hackathon.dataenlightenment.UsageGraph;
 
 /**
  * @author saynoom
