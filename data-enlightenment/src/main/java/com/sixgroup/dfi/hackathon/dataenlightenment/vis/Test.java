@@ -71,7 +71,7 @@ public class Test {
                 out2.write(read);
 
             JLabel jImage = new JLabel(new ImageIcon(out2.toByteArray()));
-            JFrame jFrame = new JFrame("Graph Visu");
+            JFrame jFrame = new JFrame("Graph Visualization");
             jFrame.setSize(800, 600);
             jFrame.add(jImage);
             jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

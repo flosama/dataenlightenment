@@ -59,7 +59,8 @@ public class DOTWriter extends FilterWriter {
         write("digraph {\n");
         long graphId = graph.hashCode();
         write("id=\"" + graphId + "\";\n");
-        write("size=\"10,16\"\n");
+        write("size=\"20,10\";\n");
+        write("ratio=\"fill\";\n");
         write("edge [len=2];\n");
         Iterable<? extends IEdge<Integer>> edges = graph.getEdges();
         for (IEdge<Integer> edge : edges) {
