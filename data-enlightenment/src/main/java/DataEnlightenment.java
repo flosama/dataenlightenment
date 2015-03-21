@@ -15,8 +15,8 @@ import com.sixgroup.dfi.hackathon.dataenlightenment.client.MainFrame;
 public class DataEnlightenment {
 
     public static void main(String[] args) {
-        MainFrame mainFrame = new MainFrame();
-        mainFrame.setVisible(true);
+        MainFrame jarvis = new MainFrame(args);
+        jarvis.setVisible(true);
     }
     
 }
