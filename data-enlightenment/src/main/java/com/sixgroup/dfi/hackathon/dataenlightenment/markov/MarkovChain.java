@@ -1,16 +1,13 @@
 /*------------------------------------------------------------------------------
  * Project  : Data Enlightenment
- * Component: data-enlightenment
+ * Component: markov
  * Author   : fmahler
  * Creation : 20.03.2015 23:32:23
  *------------------------------------------------------------------------------
  */
 package com.sixgroup.dfi.hackathon.dataenlightenment.markov;
 
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Set;
+import java.util.HashMap;
 
 import com.sixgroup.dfi.hackathon.dataenlightenment.DataField;
 
@@ -21,12 +18,12 @@ public class MarkovChain {
 
     // --- Fields --------------------------------------------------------------
 
-    private Hashtable<List<DataField>, Set<DataNode>> continuations;
+    private HashMap<DataFieldTuple, HashMap<DataField, Integer>> continuations;
 
     // --- Constructors --------------------------------------------------------
 
     public MarkovChain() {
-        continuations = new Hashtable<>();
+        continuations = new HashMap<>();
     }
 
     // --- Properties ----------------------------------------------------------
@@ -35,26 +32,23 @@ public class MarkovChain {
 
     // --- Addition ------------------------------------------------------------
 
-    public void addContinuation(List<DataField> prefix, DataField suffix, int count) {
-        Set<DataNode> suffices = continuations.get(prefix);
-        if (suffices != null) {
-            suffices.add(new DataNode(suffix, count));
+    public void increment(DataFieldTuple prefix, DataField suffix) {
+        HashMap<DataField, Integer> existingSuffices = continuations.get(prefix);
+        if (existingSuffices != null) {
+            if (existingSuffices.containsKey(suffix)) {
+                Integer count = existingSuffices.get(suffix);
+                count += 1;
+            }
+            else {
+                existingSuffices.put(suffix, new Integer(1));
+            }
         }
         else {
-            suffices = new HashSet<>();
-            suffices.add(new DataNode(suffix, count));
+            HashMap<DataField, Integer> suffices = new HashMap<>();
+            suffices.put(suffix, new Integer(1));
             continuations.put(prefix, suffices);
         }
-    }
 
-    public void addMultipleContinuations(List<DataField> prefix, Set<DataNode> suffices) {
-        Set<DataNode> existingSuffices = continuations.get(prefix);
-        if (suffices != null) {
-            existingSuffices.addAll(suffices);
-        }
-        else {
-            continuations.put(prefix, suffices);
-        }
     }
 
     // --- Access --------------------------------------------------------------

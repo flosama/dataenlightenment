@@ -1,9 +1,19 @@
+/*------------------------------------------------------------------------------
+ * Project  : Data Enlightenment
+ * Component: markov
+ * Author   : fmahler
+ * Creation : 21.03.2015 01:50:12
+ *------------------------------------------------------------------------------
+ */
 package com.sixgroup.dfi.hackathon.dataenlightenment.markov;
 
 import com.sixgroup.dfi.hackathon.dataenlightenment.DataField;
 
+/**
+ * @author fmahler
+ */
 public class DataNode {
-    
+
     private DataField field;
     private int count;
 
