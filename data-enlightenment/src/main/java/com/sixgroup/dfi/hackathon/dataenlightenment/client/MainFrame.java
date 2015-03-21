@@ -24,7 +24,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -65,9 +64,6 @@ public class MainFrame extends JFrame {
     private JPanel graphvizPanel;
     private JPanel markovPanel;
 
-    private Action generateAction;
-    private Action exitAction;
-
     // --- Constructors --------------------------------------------------------
 
     public MainFrame(Instructions instructions, int forecastIterations, int markovDegree) {
@@ -77,7 +73,6 @@ public class MainFrame extends JFrame {
         this.markovDegree = markovDegree;
 
         initSelf();
-        initActions();
         initComponents();
 
         MediaType format = new MediaType("image", "png");
@@ -167,17 +162,8 @@ public class MainFrame extends JFrame {
     }
 
     private void initButtons(JPanel buttonCard) {
-        JButton generateButton = new JButton(generateAction);
-        JButton exit = new JButton(exitAction);
-
-        buttonCard.add(generateButton);
-        buttonCard.add(exit);
-
-    }
-
-    private void initActions() {
-
-        generateAction = new AbstractAction("Generate") {
+        JButton generateButton = new JButton();
+        generateButton.setAction(new AbstractAction("Generate") {
 
             private static final long serialVersionUID = -8507010632269506221L;
 
@@ -187,21 +173,8 @@ public class MainFrame extends JFrame {
                 generateUsageGraphics(dataService.getUsageGraph());
                 generateForecastGraphics(dataService.getMarkovChain());
             }
-        };
-
-        exitAction = new AbstractAction("Exit") {
-
-            /**
-             * 
-             */
-            private static final long serialVersionUID = 1032171808150985393L;
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                MainFrame.this.dispose();
-            }
-
-        };
+        });
+        buttonCard.add(generateButton);
 
     }
 
