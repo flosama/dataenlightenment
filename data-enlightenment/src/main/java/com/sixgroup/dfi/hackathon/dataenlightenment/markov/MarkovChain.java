@@ -56,7 +56,7 @@ public class MarkovChain {
 
     // --- Access --------------------------------------------------------------
 
-    public DataField getNextField(DataField prefix) {
+    public DataField getNextField(DataFieldTuple prefix) {
         HashMap<DataField, Integer> suffices = continuations.get(prefix);
         if (suffices == null) {
             return null;
@@ -65,11 +65,12 @@ public class MarkovChain {
         for (Integer count : suffices.values()) {
             totalCount += count;
         }
-        int randomLimit = rnd.nextInt(totalCount - 1);
+        int randomLimit = rnd.nextInt(totalCount);
+        randomLimit += 1;
         DataField randomSuffix = null;
         for (DataField field : suffices.keySet()) {
             int currentCount = suffices.get(field);
-            if (currentCount >= randomLimit) {
+            if (randomLimit > currentCount) {
                 randomLimit -= currentCount;
             }
             else {
