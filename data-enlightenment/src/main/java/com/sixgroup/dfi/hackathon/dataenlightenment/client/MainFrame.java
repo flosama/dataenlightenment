@@ -7,6 +7,7 @@
  */
 package com.sixgroup.dfi.hackathon.dataenlightenment.client;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -25,9 +26,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -150,7 +151,7 @@ public class MainFrame extends JFrame {
     private void initComponents() {
 
         rootPanel = new JPanel();
-        rootPanel.setLayout(new CardLayout());
+        rootPanel.setLayout(new BorderLayout());
 
         contentCard = new JPanel();
         buttonCard = new JPanel();
@@ -165,8 +166,8 @@ public class MainFrame extends JFrame {
         tabsPanel.addTab("Graphical Representation", graphvizPanel);
         contentCard.add(tabsPanel);
         
-        rootPanel.add(contentCard, CONTENTPANEL);
-        rootPanel.add(buttonCard, BUTTONPANEL);
+        rootPanel.add(contentCard, BorderLayout.CENTER);
+        rootPanel.add(buttonCard, BorderLayout.SOUTH);
 
         this.add(rootPanel);
     }
