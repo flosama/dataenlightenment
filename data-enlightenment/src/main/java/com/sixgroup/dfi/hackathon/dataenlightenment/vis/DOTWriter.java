@@ -57,6 +57,7 @@ public class DOTWriter extends FilterWriter {
 
     public void write(UsageGraph graph) throws IOException {
         write("digraph {\n");
+        write("size=\"12,8\"\n");
         long graphId = graph.hashCode();
         write("id=\"" + graphId + "\";\n");
 
@@ -81,7 +82,7 @@ public class DOTWriter extends FilterWriter {
 
             write("penwidth=");
             float count = edge.getElement();
-            count /= 2;
+            count *= 2;
             String penwidth = Float.toString(count);
             write(penwidth);
 
