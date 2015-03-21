@@ -8,6 +8,7 @@
 package com.sixgroup.dfi.hackathon.dataenlightenment.markov;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import com.sixgroup.dfi.hackathon.dataenlightenment.DataField;
 
@@ -19,11 +20,13 @@ public class MarkovChain {
     // --- Fields --------------------------------------------------------------
 
     private HashMap<DataFieldTuple, HashMap<DataField, Integer>> continuations;
+    private Random rnd;
 
     // --- Constructors --------------------------------------------------------
 
     public MarkovChain() {
         continuations = new HashMap<>();
+        rnd = new Random();
     }
 
     // --- Properties ----------------------------------------------------------
@@ -52,6 +55,30 @@ public class MarkovChain {
     }
 
     // --- Access --------------------------------------------------------------
+
+    public DataField getNextField(DataField prefix) {
+        HashMap<DataField, Integer> suffices = continuations.get(prefix);
+        if (suffices == null) {
+            return null;
+        }
+        int totalCount = 0;
+        for (Integer count : suffices.values()) {
+            totalCount += count;
+        }
+        int randomLimit = rnd.nextInt(totalCount - 1);
+        DataField randomSuffix = null;
+        for (DataField field : suffices.keySet()) {
+            int currentCount = suffices.get(field);
+            if (currentCount >= randomLimit) {
+                randomLimit -= currentCount;
+            }
+            else {
+                randomSuffix = field;
+                break;
+            }
+        }
+        return randomSuffix;
+    }
 
     // --- Examination ---------------------------------------------------------
 
