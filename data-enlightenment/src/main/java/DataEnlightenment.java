@@ -7,15 +7,11 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.List;
 
-import com.sixgroup.dfi.hackathon.dataenlightenment.DataService;
-import com.sixgroup.dfi.hackathon.dataenlightenment.UsageGraph;
 import com.sixgroup.dfi.hackathon.dataenlightenment.client.MainFrame;
-import com.sixgroup.dfi.hackathon.dataenlightenment.gen.DataGenerator;
 import com.sixgroup.dfi.hackathon.dataenlightenment.gen.Instruction;
 import com.sixgroup.dfi.hackathon.dataenlightenment.gen.InstructionGenerator;
 import com.sixgroup.dfi.hackathon.dataenlightenment.gen.InstructionParser;
 import com.sixgroup.dfi.hackathon.dataenlightenment.gen.Instructions;
-import com.sixgroup.dfi.hackathon.dataenlightenment.markov.MarkovChain;
 
 /*------------------------------------------------------------------------------
  * Project  : Data Enlightenment
@@ -38,12 +34,7 @@ public class DataEnlightenment {
     public static void main(String[] args) throws IOException {
         Instructions instructions = generateInstructions();
 
-        UsageGraph usageGraph = new UsageGraph();
-
-        MarkovChain markovChain = new MarkovChain();
-        DataService dataService = learn(instructions, usageGraph, markovChain, MARKOV_DEGREE);
-
-        MainFrame jarvis = new MainFrame(dataService, FORECAST_ITERATIONS);
+        MainFrame jarvis = new MainFrame(instructions, FORECAST_ITERATIONS, MARKOV_DEGREE);
         jarvis.setVisible(true);
     }
 
@@ -64,13 +55,6 @@ public class DataEnlightenment {
             instructionList = parser.parseInstructions(reader);
         }
         return new Instructions(instructionList);
-    }
-
-    private static DataService learn(Instructions instructions, UsageGraph graph, MarkovChain markovChain, int markovDegree) {
-        DataService dataService = new DataService(graph, markovChain, markovDegree);
-        DataGenerator generator = new DataGenerator(dataService);
-        generator.generateData(instructions, 100);
-        return dataService;
     }
 
 }

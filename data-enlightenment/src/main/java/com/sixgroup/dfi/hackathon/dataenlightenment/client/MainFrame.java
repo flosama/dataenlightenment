@@ -41,6 +41,8 @@ import com.sixgroup.dfi.common.graphviz.RenderingEngine;
 import com.sixgroup.dfi.hackathon.dataenlightenment.DataField;
 import com.sixgroup.dfi.hackathon.dataenlightenment.DataService;
 import com.sixgroup.dfi.hackathon.dataenlightenment.UsageGraph;
+import com.sixgroup.dfi.hackathon.dataenlightenment.gen.DataGenerator;
+import com.sixgroup.dfi.hackathon.dataenlightenment.gen.Instructions;
 import com.sixgroup.dfi.hackathon.dataenlightenment.markov.DataFieldTuple;
 import com.sixgroup.dfi.hackathon.dataenlightenment.markov.MarkovChain;
 import com.sixgroup.dfi.hackathon.dataenlightenment.vis.DOTWriter;
@@ -54,8 +56,9 @@ public class MainFrame extends JFrame {
 
     // --- Fields --------------------------------------------------------------
 
-    private final DataService dataService;
+    final Instructions instructions;
     private final int forecastIterations;
+    private final int markovDegree;
 
     private RenderingEngine renderingEngine;
 
@@ -67,10 +70,11 @@ public class MainFrame extends JFrame {
 
     // --- Constructors --------------------------------------------------------
 
-    public MainFrame(DataService dataService, int forecastIterations) {
+    public MainFrame(Instructions instructions, int forecastIterations, int markovDegree) {
         super();
-        this.dataService = dataService;
+        this.instructions = instructions;
         this.forecastIterations = forecastIterations;
+        this.markovDegree = markovDegree;
 
         initSelf();
         initActions();
@@ -138,6 +142,7 @@ public class MainFrame extends JFrame {
         }
         this.setLocation(300, 100);
         this.setMinimumSize(new Dimension(600, 400));
+        this.setTitle("Data Enlightenment");
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -149,7 +154,7 @@ public class MainFrame extends JFrame {
 
         JTabbedPane contentCard = new JTabbedPane();
         graphvizPanel = new JPanel();
-        contentCard.addTab("Graphical Representation", graphvizPanel);
+        contentCard.addTab("Analysis", graphvizPanel);
         markovPanel = new JPanel();
         contentCard.addTab("Forecast", markovPanel);
         rootPanel.add(contentCard, BorderLayout.CENTER);
@@ -178,8 +183,9 @@ public class MainFrame extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                generateUsageGraphics();
-                generateForecastGraphics();
+                DataService dataService = learn(instructions);
+                generateUsageGraphics(dataService.getUsageGraph());
+                generateForecastGraphics(dataService.getMarkovChain());
             }
         };
 
@@ -199,19 +205,29 @@ public class MainFrame extends JFrame {
 
     }
 
-    void generateUsageGraphics() {
+    DataService learn(Instructions instructions) {
+        UsageGraph usageGraph = new UsageGraph();
+        MarkovChain markovChain = new MarkovChain();
+
+        DataService dataService = new DataService(usageGraph, markovChain, markovDegree);
+        DataGenerator generator = new DataGenerator(dataService);
+        generator.generateData(instructions, 100);
+        return dataService;
+    }
+
+    void generateUsageGraphics(UsageGraph usageGraph) {
         try {
-            ImageIcon image = renderGraph(dataService.getUsageGraph());
+            ImageIcon image = renderGraph(usageGraph);
             graphvizPanel.removeAll();
             graphvizPanel.add(new JLabel(image));
+            graphvizPanel.repaint();
         } catch (InterruptedException | ExecutionException | IOException e) {
             throw new IllegalStateException("Could not generate image.", e);
         }
     }
 
-    void generateForecastGraphics() {
+    void generateForecastGraphics(MarkovChain markovChain) {
         UsageGraph forecastGraph = new UsageGraph();
-        MarkovChain markovChain = dataService.getMarkovChain();
         DataFieldTuple prefix = markovChain.getRandomPrefix();
         DataField[] prefixFields = prefix.getFields();
         int markovDegree = prefixFields.length;
@@ -240,6 +256,7 @@ public class MainFrame extends JFrame {
             ImageIcon image = renderGraph(forecastGraph);
             markovPanel.removeAll();
             markovPanel.add(new JLabel(image));
+            markovPanel.repaint();
         } catch (InterruptedException | ExecutionException | IOException e) {
             throw new IllegalStateException("Could not generate image.", e);
         }
