@@ -5,12 +5,14 @@
  * Creation : 20.03.2015 23:32:23
  *------------------------------------------------------------------------------
  */
-package com.sixgroup.dfi.hackathon.dataenlightenment;
+package com.sixgroup.dfi.hackathon.dataenlightenment.markov;
 
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
+
+import com.sixgroup.dfi.hackathon.dataenlightenment.DataField;
 
 /**
  * @author fmahler
