@@ -9,6 +9,7 @@ package com.sixgroup.dfi.hackathon.dataenlightenment.markov;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import com.sixgroup.dfi.hackathon.dataenlightenment.DataField;
 
@@ -28,6 +29,10 @@ public class DataFieldTuple implements Iterable<DataField> {
         if (fields == null || fields.length == 0)
             throw new IllegalArgumentException("Missing a field.");
         this.fields = fields;
+    }
+
+    public DataFieldTuple(List<DataField> fields) {
+        this(fields.toArray(new DataField[fields.size()]));
     }
 
     // --- Access --------------------------------------------------------------
