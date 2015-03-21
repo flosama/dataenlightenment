@@ -54,21 +54,10 @@ public class MainFrame extends JFrame {
 
     // --- Fields --------------------------------------------------------------
 
-    final static String CONTENTPANEL = "Content Card";
-    final static String BUTTONPANEL = "Button Card";
-
     private final Instructions instructions;
-
-    private JPanel rootPanel;
-    private JTabbedPane contentCard;
-    private JPanel buttonCard;
 
     private JPanel graphvizPanel;
     private JPanel markovPanel;
-
-    private JButton generateButton;
-
-    private JButton exit;
 
     private Action generateAction;
     private Action exitAction;
@@ -144,26 +133,26 @@ public class MainFrame extends JFrame {
 
     private void initComponents() {
 
-        rootPanel = new JPanel();
+        JPanel rootPanel = new JPanel();
         rootPanel.setLayout(new BorderLayout());
 
-        contentCard = new JTabbedPane();
+        JTabbedPane contentCard = new JTabbedPane();
         markovPanel = new JPanel();
         contentCard.addTab("Forecast", markovPanel);
         graphvizPanel = new JPanel();
         contentCard.addTab("Graphical Representation", graphvizPanel);
         rootPanel.add(contentCard, BorderLayout.CENTER);
 
-        buttonCard = new JPanel();
+        JPanel buttonCard = new JPanel();
         rootPanel.add(buttonCard, BorderLayout.SOUTH);
-        initButtons();
+        initButtons(buttonCard);
 
         this.add(rootPanel);
     }
 
-    private void initButtons() {
-        generateButton = new JButton(generateAction);
-        exit = new JButton(exitAction);
+    private void initButtons(JPanel buttonCard) {
+        JButton generateButton = new JButton(generateAction);
+        JButton exit = new JButton(exitAction);
 
         buttonCard.add(generateButton);
         buttonCard.add(exit);
