@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,10 +31,16 @@ public class InstructionParser {
     // --- Basic operations ----------------------------------------------------
 
     public List<Instruction> parseInstructions(File definition) throws IOException {
+        try (Reader reader = new FileReader(definition)) {
+            return parseInstructions(reader);
+        }
+    }
+
+    public List<Instruction> parseInstructions(Reader reader) throws IOException {
         List<Instruction> instructions = new LinkedList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(definition))) {
+        try (BufferedReader breader = new BufferedReader(reader)) {
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = breader.readLine()) != null) {
                 Instruction instruction = parseInstruction(line);
                 if (instruction != null)
                     instructions.add(instruction);

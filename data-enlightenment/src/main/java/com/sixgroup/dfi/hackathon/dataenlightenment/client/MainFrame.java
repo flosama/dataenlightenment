@@ -11,7 +11,6 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -23,13 +22,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -41,7 +38,6 @@ import com.sixgroup.dfi.common.graphviz.RenderingEngine;
 import com.sixgroup.dfi.hackathon.dataenlightenment.DataService;
 import com.sixgroup.dfi.hackathon.dataenlightenment.UsageGraph;
 import com.sixgroup.dfi.hackathon.dataenlightenment.gen.DataGenerator;
-import com.sixgroup.dfi.hackathon.dataenlightenment.gen.InstructionParser;
 import com.sixgroup.dfi.hackathon.dataenlightenment.gen.Instructions;
 import com.sixgroup.dfi.hackathon.dataenlightenment.vis.DOTWriter;
 import com.sixgroup.dfi.hackathon.dataenlightenment.vis.GraphDataService;
@@ -54,25 +50,28 @@ public class MainFrame extends JFrame {
     private static final long serialVersionUID = -1711963739199399507L;
 
     // --- Fields --------------------------------------------------------------
-    
+
     final static String CONTENTPANEL = "Content Card";
     final static String BUTTONPANEL = "Button Card";
-    
+
+    private final Instructions instructions;
+
     private JPanel rootPanel;
     private JPanel contentCard;
     private JPanel buttonCard;
     private JTabbedPane tabsPanel;
-    
+
     private JPanel graphvizPanel;
     private JPanel markovPanel;
-    
+
     private JButton generate;
     private JButton exit;
 
     // --- Constructors --------------------------------------------------------
 
-    public MainFrame() {
+    public MainFrame(Instructions instructions) {
         super();
+        this.instructions = instructions;
         initSelf();
         initComponents();
         initGraphics();
@@ -138,32 +137,31 @@ public class MainFrame extends JFrame {
     }
 
     private void initComponents() {
-        
+
         rootPanel = new JPanel();
         rootPanel.setLayout(new CardLayout());
-        
+
         tabsPanel = new JTabbedPane();
-        
+
         markovPanel = new JPanel();
         graphvizPanel = new JPanel();
         initButtons();
-        
+
         tabsPanel.addTab("Forecast", markovPanel);
         tabsPanel.addTab("Graphical Representation", graphvizPanel);
-        
-        
+
         this.add(rootPanel);
     }
 
     private void initButtons() {
         generate = new JButton();
         exit = new JButton();
-        
+
         // TODO init actions
-        
+        buttonCard = new JPanel();
         buttonCard.add(generate);
         buttonCard.add(exit);
-        
+
     }
 
     private void initGraphics() {
@@ -177,8 +175,6 @@ public class MainFrame extends JFrame {
             UsageGraph graph = new UsageGraph();
             DataService dataService = new GraphDataService(graph);
             DataGenerator generator = new DataGenerator(dataService);
-            InstructionParser parser = new InstructionParser();
-            Instructions instructions = new Instructions(parser.parseInstructions(new File("src/main/resources/temp")));
             generator.generateData(instructions, 100);
 
             ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
@@ -195,11 +191,11 @@ public class MainFrame extends JFrame {
                 int read;
                 while ((read = in.read()) != -1)
                     out2.write(read);
-            JLabel jImage = new JLabel(new ImageIcon(out2.toByteArray()));
-            graphvizPanel.add(jImage);
-            jImage.setVisible(true);
-            graphvizPanel.setVisible(true);
-            } catch (IOException e){
+                JLabel jImage = new JLabel(new ImageIcon(out2.toByteArray()));
+                graphvizPanel.add(jImage);
+                jImage.setVisible(true);
+                graphvizPanel.setVisible(true);
+            } catch (IOException e) {
                 // TODO not generated, change it anyway
                 e.printStackTrace();
             }
