@@ -20,7 +20,7 @@ import java.util.TreeMap;
  */
 public class VDF {
 
-    private static final String META_FILE = "vdf-structures.txt";
+    private static final String META_FILE = "vdf-structures-en.txt";
     private static Map<String, String> MAPPING;
 
     static {
